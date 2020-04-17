@@ -1,3 +1,5 @@
+# imports
+
 from sklearn.model_selection import KFold
 import pandas as pd
 import numpy as np
@@ -10,13 +12,12 @@ from sklearn.metrics import mean_squared_error
 class SNKFC:
 
     def __init__(self, models, k, s):
-        self.models = models
-        self.k = k
+        self.models = models                # models as list of dictionaries
+        self.k = k                          # k for k-fold as train_size%k == 0
         self.s = s
 
-    def fit(self, data, target):
+    def fit(self, data, target):           # tarining features & target values
         kf = KFold(n_splits=self.k)
-    #    n1 = len(self.models)
         L = 0
         for model in self.models:
             n = len(model)
@@ -25,7 +26,7 @@ class SNKFC:
             pred = pd.DataFrame()
             for train_index, val_index in kf.split(data):
                 X_train, X_val = data.loc[train_index], data.loc[val_index]
-                y_train, y_val = target[train_index], target[val_index]
+                y_train = target[train_index]
                 c = 0
                 while c < n:
                     model[c].fit(X_train, y_train)
@@ -82,7 +83,6 @@ class SNKFR:
 
     def fit(self, data, target):
         kf = KFold(n_splits=self.k)
-        # n1 = len(self.models)
         L = 0
         for model in self.models:
             n = len(model)
@@ -91,7 +91,7 @@ class SNKFR:
             pred = pd.DataFrame()
             for train_index, val_index in kf.split(data):
                 X_train, X_val = data.loc[train_index], data.loc[val_index]
-                y_train, y_val = target[train_index], target[val_index]
+                y_train = target[train_index]
                 c = 0
                 while c < n:
                     model[c].fit(X_train, y_train)
